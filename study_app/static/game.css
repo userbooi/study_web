@@ -1,0 +1,23 @@
+body {
+  background-image: url('galaxy_background.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.jumbotron-custom {
+    width: 60%;
+    height: 475px;
+    margin: auto;
+}
+
+.greetings {
+    font-family: "Lucida Handwriting";
+}

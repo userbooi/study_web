@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>Testing</title>
+    <link rel="stylesheet" href="{% static 'feedback.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+<div class="p-5 text-center mb-4 mr-4 ml-7 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <form>
+            Activity Level: <select id="activity_level">
+                            <option value="null">Please Choose One...</option>
+                            <option value="1.25">Practically a Vegetable</option>
+                            <option value="1.35">Mostly Desk Work and Light Walking</option>
+                            <option value="1.55">Moderate Exercise 2-3 Times Per Week</option>
+                            <option value="1.75">Heavy Exercise 3-4 Times Per Week</option>
+                            <option value="1.95">Committed Hardcore Athlete</option>
+                            </select></br>
+            BodyFat Percentage <input type="text" id="bfp" /> </br>
+            Total Weight <input type="text" id="tw" /></br>
+            Target Bodyfat Percentage <input type="text" id="target_bodyfat_pct" /></br>
+            <input type="button" value="Calculate" onclick="Calculate()" />
+        </form>
+    </div>
+</div>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.message == "You have Logged Out" %}
+                var myModal = new bootstrap.Modal(document.getElementById('logoutModal'), {});
+                myModal.toggle();
+            {% elif message.message == "Thanks for The Feedback" %}
+                var myModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {});
+                myModal.toggle();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    var myString = "{{ hi|escapejs }}";
+</script>
+<script src="{% static 'scripts/testing.js' %}"></script>
+{% endblock content %}
+</body>
+</html>

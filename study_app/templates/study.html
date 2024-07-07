@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>Study {{ grade.title }}</title>
+    <link rel="stylesheet" href="{% static 'study.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+<div class="container-fluid border-bottom border-3 pt-4 bg-dark">
+  <h1 class="display-5 fw-bold text-light text-center">
+    {{ grade.title }}
+  </h1>
+</div>
+
+<div class="mb-4 mt-4 bg-light border rounded-3 jumbotron-custom">
+  <div class="container-fluid">
+    <div class="row bg-light align-center pt-5 border-dark">
+      <div class="col-2" style="overflow-y:auto; height: 80vh;">
+        <nav id="navbar-example3" class="h-100 flex-column align-items-stretch pe-4">
+          <nav class="nav nav-pills flex-column">
+            {% for unit in units %}
+              <a class="nav-link border-bottom border-dark text-dark h5 fw-bold" href="#{{ unit.title }}">
+                  {{ unit.title }}
+              </a>
+              <nav class="nav nav-pills flex-column">
+                {% for subunit in subunits %}
+                  {% if subunit.unit == unit %}
+                    <a class="nav-link ms-3 my-1 border-bottom border-dark text-dark" href="#{{ subunit.title }}">
+                        {{ subunit.title }}
+                    </a>
+                  {% endif %}
+                {% endfor %}
+            {% endfor %}
+            </nav>
+          </nav>
+        </nav>
+      </div>
+
+      <div class="col-10 text-start">
+        <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true" class="scrollspy-example-2 text-dark border-start border-dark ps-4" tabindex="0" style="overflow-y:auto; height: 80vh;">
+          {% for unit in units %}
+            <div id="{{ unit.title }}">
+              <h4>{{ unit.title }}</h4>
+            </div>
+            <br>
+            {% for subunit in subunits %}
+              {% if subunit.unit == unit %}
+                <div id="{{ subunit.title }}">
+                  <h5>{{ subunit.title }}</h5>
+                  <p>{{ subunit.description }}</p>
+                </div>
+                <br>
+              {% endif %}
+            {% endfor %}
+            <a class="btn btn-info text-light" role="button" href="{% url 'main:test' unit.subject.title unit.title %}">Take Test</a>
+            <br>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if user.username == "adminguy" %}
+<div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom2" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New Unit</h1>
+        <form action="{% url current_url grade.id %}" method="post" class="form">
+            {% csrf_token %}
+            {% bootstrap_form unit_form %}
+
+            <input type="submit" name="unit" class="btn btn-primary" value="Add">
+        </form>
+    </div>
+</div>
+
+<div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom2" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New Subunit</h1>
+        <form action="{% url current_url grade.id %}" method="post" class="form">
+            {% csrf_token %}
+            {% bootstrap_form subunit_form %}
+
+            <input type="submit" name="subunit" class="btn btn-primary" value="Add">
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.message == "Thanks for The Feedback" %}
+                var myModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {});
+                myModal.toggle();
+            {% elif message.message == "You have Logged Out" %}
+                var myModal = new bootstrap.Modal(document.getElementById('logoutModal'), {});
+                myModal.toggle();
+            {% elif message.message == "something went wrong" %}
+                var myModal = new bootstrap.Modal(document.getElementById('errorModal'), {});
+                myModal.toggle();
+            {% elif message.message == "successfully added" %}
+                var myModal = new bootstrap.Modal(document.getElementById('successModal'), {});
+                myModal.toggle();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock content %}
+</body>
+</html>

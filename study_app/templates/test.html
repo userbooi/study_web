@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>{{ unit }} test</title>
+    <link rel="stylesheet" href="{% static 'test.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+
+
+<div class="progress w-50 mt-5 mx-auto" role="progressbar" id="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+    <div id="progress" class="progress-bar d-flex justify-content-center bg-info" style="width: 0%"></div>
+</div>
+
+<div class="p-5 text-end mb-4 mr-4 ml-7 mt-4 bg-light border rounded-3 jumbotron-custom">
+    <div class="container-fluid py-2" id="regUserContent">
+        <form class="form fs-3 fw-bold" id="multiple_choice">
+            {% csrf_token %}
+            <div class="text-start">
+                <div class="fs-3 mb-3" id="question"></div>
+                <div class="fs-4 ms-3" id="choices"></div>
+            </div>
+            <button id="submit_button" class="btn btn-info text-dark text-end"></button>
+        </form>
+    </div>
+</div>
+
+{% if user.username == "adminguy" %}
+    {% if multiple_choice_quiz_form %}
+    <div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+        <div class="container-fluid py-2">
+            <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New Quiz</h1>
+            <form action="{% url current_url subject unit %}" method="post" class="form text-light mt-5">
+                {% csrf_token %}
+                {% bootstrap_form multiple_choice_quiz_form %}
+
+                <input type="submit" name="quiz" class="btn btn-primary" value="Add">
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+        <div class="container-fluid py-2">
+            <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Current Quiz Information</h1>
+            <table class="table text-light fw-bold table-bordered border-light mt-3">
+                <thead>
+                    <tr>
+                      <th scope="col">Quiz Unit</th>
+                      <th scope="col">Number of Questions</th>
+                      <th scope="col">Mark to Pass</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{ quiz.unit }}</td>
+                      <td>{{ quiz.number_of_questions }}</td>
+                      <td>{{ quiz.required_score_to_pass }}%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table text-light fw-bold table-bordered border-light mt-3">
+                <thead>
+                    <tr>
+                      <th scope="col">Questions</th>
+                      <th scope="col">Choices</th>
+                      <th scope="col">Correct?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for choice in choices %}
+                        {% if choice.question.quiz.unit == unit %}
+                            <tr>
+                                <td>{{ choice.question }}</td>
+                                <td>{{ choice }}</td>
+                                <td>{{ choice.correct }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+<div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New Question</h1>
+        <form action="{% url current_url subject unit %}" method="post" class="form text-light mt-5">
+            {% csrf_token %}
+            {% bootstrap_form multiple_choice_question_form %}
+
+            <input type="submit" name="question" class="btn btn-primary" value="Add">
+        </form>
+    </div>
+</div>
+
+<div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New choice</h1>
+        <form action="{% url current_url subject unit %}" method="post" class="form text-light mt-5">
+            {% csrf_token %}
+            {% bootstrap_form multiple_choice_choice_form %}
+
+            <input type="submit" name="choices" class="btn btn-primary" value="Add">
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<div class="modal fade" id="correctModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-success">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-light">Correct!!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-light">
+                You got the answer right! How smart!
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="wrongModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-light">Incorrect...</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-light" id="incorrectMessage"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.message == "You have Logged Out" %}
+                var myModal = new bootstrap.Modal(document.getElementById('logoutModal'), {});
+                myModal.toggle();
+            {% elif message.message == "Thanks for The Feedback" %}
+                var myModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {});
+                myModal.toggle();
+            {% elif message.message == "something went wrong" %}
+                var myModal = new bootstrap.Modal(document.getElementById('errorModal'), {});
+                myModal.toggle();
+            {% elif message.message == "successfully added" %}
+                var myModal = new bootstrap.Modal(document.getElementById('successModal'), {});
+                myModal.toggle();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    const data = JSON.parse('{{ js_data|escapejs }}');
+    const t_question = "{{ quiz.number_of_questions|escapejs }}";
+    const quiz_unit = "{{ quiz.unit|escapejs }} Test";
+    const quiz_passing = "{{ quiz.required_score_to_pass|escapejs }}";
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{% static 'scripts/test.js' %}"></script>
+{% endblock content %}
+</body>
+</html>

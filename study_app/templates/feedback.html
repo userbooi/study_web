@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>Give me Feedback</title>
+    <link rel="stylesheet" href="{% static 'feedback.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+<!--{% if messages %}-->
+<!--<ul class="messages">-->
+<!--    {% for message in messages %}-->
+<!--        {% if message.tags == "success" %}-->
+<!--        <li class="{{ message.tags }}">-->
+<!--            <div class="text-center bg-success rounded-3 jumbotron-custom">-->
+<!--                <div class="container-fluid py-3">-->
+<!--                    <h3 class="display-7 fw-bold">{{ message }}</h3>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </li>-->
+<!--        {% else %}-->
+<!--        <li class="{{ message.tags }}">-->
+<!--            <div class="text-center bg-danger rounded-3 jumbotron-custom">-->
+<!--                <div class="container-fluid py-3">-->
+<!--                    <h3 class="display-7 fw-bold">{{ message }}</h3>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </li>-->
+<!--        {% endif %}-->
+<!--    {% endfor %}-->
+<!--</ul>-->
+<!--{% endif %}-->
+
+<div class="p-5 text-center mb-4 mr-4 ml-7 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        {% for feedback in feedbacks %}
+        <div class="card bg-success mb-3">
+          <div class="fs-4 card-body fw-bold text-end">
+            <div class="text-center">
+                {{ feedback.feedback }}
+            </div>
+             - {{ feedback.owner }}
+            <br>
+            <br>
+            <a href="{% url 'main:feedback_delete' feedback.id %}" class="btn btn-danger">
+                delete
+            </a>
+          </div>
+        </div>
+        {% empty %}
+        <h1 class="text-light">There is no Feedback rn</h1>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}
+</body>
+</html>

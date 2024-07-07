@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>Physics</title>
+    <link rel="stylesheet" href="{% static 'physics.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+<div class="text-left" style="padding: 4%;">
+    <div class="container border-bottom border-3 border-light mb-4">
+        <h1 class="display-5 fw-bold text-light" style="margin-left: 6%;">
+            Physics!
+        </h1>
+    </div>
+    <div class="row" style="margin-left: 6%">
+      <div class="col-sm-5 mb-3 mb-sm-0">
+        <div class="card bg-dark border-0 bg-opacity-50">
+          <div class="card-body">
+            <h4 class="card-text fw-bold text-light">
+                You can review the physics concepts starting from Grade 9 and up to which ever Grade
+                that have been entered.
+            </h4>
+            <br>
+            <h4 class="card-text fw-bold text-light">
+                **NOTE information passed our current grade might not be 100% completed and it is
+                to be updated
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-7">
+          <img src="{% static 'images/physics_image.png' %}" class="rounded mx-auto d-block" alt="..." style="height: 90%; width: 72%;">
+      </div>
+    </div>
+
+    <div class="row" style="margin-left: 6%; margin-right: 6%;">
+      {% for grade in physics_grades %}
+      <div class="col-sm-4 mb-3">
+        <div class="card bg-dark border border-4 border-success" style="--bs-border-opacity: .5;">
+          <img src="{{ grade.image.url }}" class="card-img-top" alt="{{ grade.title }}">
+          <div class="card-body">
+            <h5 class="card-title text-light mb-5">{{ grade.title }}</h5>
+            <a href="{% url 'main:study_physics' grade.id %}" class="btn btn-outline-info text-light">Learn/Review</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+
+{% if user.username == "adminguy" %}
+<div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New Physics Main</h1>
+        <form action="{% url 'main:physics' %}" method="post" class="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form physics_main_form %}
+
+            <input type="submit" class="btn btn-primary" value="Add">
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.message == "Thanks for The Feedback" %}
+                var myModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {});
+                myModal.toggle();
+            {% elif message.message == "You have Logged Out" %}
+                var myModal = new bootstrap.Modal(document.getElementById('logoutModal'), {});
+                myModal.toggle();
+            {% elif message.message == "something went wrong" %}
+                var myModal = new bootstrap.Modal(document.getElementById('errorModal'), {});
+                myModal.toggle();
+            {% elif message.message == "successfully added" %}
+                var myModal = new bootstrap.Modal(document.getElementById('successModal'), {});
+                myModal.toggle();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock content %}
+</body>
+</html>

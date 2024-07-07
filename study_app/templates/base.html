@@ -1,0 +1,221 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<link rel="icon" type="images/x-icon" href="{% static 'favicon.ico' %}">
+{% block header %}{% endblock header %}
+
+<nav class="navbar sticky-top navbar-expand-lg bg-dark border-bottom border-body">
+  <div class="container-fluid">
+    <img src="{% static 'book.svg' %}" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
+    <a class="navbar-brand text-light ms-3" href="{% url 'main:home' %}">
+      <h3>
+          Home |
+      </h3>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon">
+        <img src="{% static 'expand.png' %}" alt="exp." width="40px" height="40px">
+      </span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav gap-3">
+        <li class="nav-item dropdown bg-dark">
+          <a class="dropdown-toggle fs-6 btn btn-outline-info text-light" href="{% url 'main:math' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <strong>
+              Math
+            </strong>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'main:math' %}">Math (start here)</a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            {% for grade in math_grades %}
+            <li>
+              <a class="dropdown-item" href="{% url 'main:study_math' grade.id %}">{{ grade.title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown bg-dark">
+          <a class="dropdown-toggle fs-6 btn btn-outline-info text-light" href="{% url 'main:physics' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <strong>
+              Physics
+            </strong>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'main:physics' %}">Physics (start here)</a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            {% for grade in physics_grades %}
+            <li>
+              <a class="dropdown-item" href="{% url 'main:study_physics' grade.id %}">{{ grade.title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown bg-dark">
+          <a class="dropdown-toggle fs-6 btn btn-outline-info text-light" href="{% url 'main:chemistry' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <strong>
+              Chemistry
+            </strong>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'main:chemistry' %}">Chemistry (start here)</a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            {% for grade in chem_grades %}
+            <li>
+              <a class="dropdown-item" href="{% url 'main:study_chemistry' grade.id %}">{{ grade.title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown bg-dark">
+          <a class="dropdown-toggle fs-6 btn btn-outline-info text-light" href="{% url 'main:compsci' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <strong>
+              Computer Science
+            </strong>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'main:compsci' %}">CompSci (start here)</a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            {% for grade in compsci_grades %}
+            <li>
+              <a class="dropdown-item" href="{% url 'main:study_compsci' grade.id %}">{{ grade.title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="btn btn-outline-info text-light fs-6" href="{% url 'main:game' %}" role="button">
+            <strong>
+              Dino Run
+            </strong>
+          </a>
+        </li>
+        {% if user.username == "adminguy" %}
+        <li class="nav-item">
+          <a class="btn btn-outline-info text-light fs-6" href="{% url 'main:feedback' %}" role="button">
+            <strong>
+              Feedback
+            </strong>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+      {% if user.is_authenticated %}
+      <h5 class="text-light ms-auto greetings">
+        Hello <span class="fw-bold">{{ user.username }}</span>
+      </h5>
+      <a class="nav-link me-1 text-light" href="{% url 'user:logout_user' %}">
+        <h5>
+          | Logout
+        </h5>
+      </a>
+      {% else %}
+      <a class="nav-link ms-auto text-light" href="{% url 'user:login_user' %}">
+        <h5>
+          Login
+        </h5>
+      </a>
+      <h5 class="text-light">|</h5>
+      <a class="nav-link text-light" href="{% url 'user:register' %}">
+        <h5>
+          Sign Up
+        </h5>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-success">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-light">Thanks for the Feedback</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-light">
+        You can close this now
+        <br>
+        <br>
+        *NOTE* All feedbacks submitted will include the username if applicable
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-success">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-light">You have Logged Out</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-light">
+        Thank You for Visiting the Site
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-danger">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-light">Something was Wrong with Your Information</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-light">
+        Double check that all information provided is aligned with the requirements
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-success">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-light">Successfully Added</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-light">
+        You can close this now
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block content %}{% endblock content %}
+
+<footer class="bg-dark py-3 border-top">
+  <div class="container-fluid">
+    <form class="text-light ms-4 me-4" action="{% url 'main:add_feedback' %}" method="POST">
+      <h5>Give Me Feedback!</h5>
+      <br>
+      <div class="d-flex flex-sm-row w-100 gap-3 text-dark">
+        {% csrf_token %}
+        <div class="w-100">
+          {% bootstrap_form feedback_form %}
+        </div>
+
+        <button class="btn btn-info text-dark" type="submit" style="height: 40px;">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</footer>

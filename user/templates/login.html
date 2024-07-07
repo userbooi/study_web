@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+<!--{% if messages %}-->
+<!--<ul class="messages">-->
+<!--    {% for message in messages %}-->
+<!--        {% if message.tags %}-->
+<!--        <li class="{{ message.tags }}">-->
+<!--            <div class="text-center bg-danger rounded-3 jumbotron-custom">-->
+<!--                <div class="container-fluid py-3">-->
+<!--                    <h3 class="display-7 fw-bold">{{ message }}</h3>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </li>-->
+<!--        {% else %}-->
+<!--        <li>-->
+<!--            <div class="text-center bg-danger border rounded-3 jumbotron-custom">-->
+<!--                <div class="container-fluid py-3">-->
+<!--                    <h3 class="display-7 fw-bold">{{ message }}</h3>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </li>-->
+<!--        {% endif %}-->
+<!--    {% endfor %}-->
+<!--</ul>-->
+<!--{% endif %}-->
+
+<div class="p-5 text-center mb-4 mr-4 ml-7 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold pb-2 mb-2 border-bottom text-light">Login</h1>
+        <form action="{% url 'user:login_user' %}" method="POST" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <br>
+            <button class="btn btn-info">
+                <h3>
+                  Login!
+                </h3>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.message == "Thanks for The Feedback" %}
+                var myModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {});
+                myModal.toggle();
+            {% elif message.message == "Something was wrong with your information" %}
+                var myModal = new bootstrap.Modal(document.getElementById('errorModal'), {});
+                myModal.toggle();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock content %}
+</body>
+</html>

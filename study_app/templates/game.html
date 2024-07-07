@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>Gaming</title>
+    <link rel="stylesheet" href="{% static 'game.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+<div class="p-5 text-center mb-4 mr-4 ml-7 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold border-bottom text-light">Dino Run!</h1>
+        <iframe src="https://chromedino.com/" frameborder="0" scrolling="no" width="100%" height="100%" loading="lazy"></iframe>
+        <style type="text/css">iframe {position: absolute; left:25%; top:40%; width: 50%; height: 38%; z-index: 999;}</style>
+    </div>
+</div>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.message == "Thanks for The Feedback" %}
+                var myModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {});
+                myModal.toggle();
+            {% elif message.message == "You have Logged Out" %}
+                var myModal = new bootstrap.Modal(document.getElementById('logoutModal'), {});
+                myModal.toggle();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock content %}
+</body>
+</html>

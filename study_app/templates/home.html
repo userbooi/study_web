@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% extends './base.html' %}
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block header %}
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+    {% endblock header %}
+</head>
+<body>
+{% block content %}
+<div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold text-light">Welcome!</h1>
+        <p class="lead text-light">
+            This website is created by Edwin and it is a public archive for the stuff that will be
+            taught in grades 9 to 12 for various subjects. You can review concepts from different
+            grades. If you get bored or want to do something else, check out the Dino Run tab to
+            play dino run (even though you can just leave this site and play it elsewhere...)! If
+            you have any suggestions or comments, you can scroll down to the bottom of any page
+            and write it there. Thank you!
+        </p>
+    </div>
+</div>
+
+<div class="row mb-5" style="margin-left: 13%; margin-right: 13%;">
+  <div class="col-sm-4 mb-3">
+    <div class="card bg-dark border border-1" style="--bs-border-opacity: .5;">
+      <img src="{% static 'images/math.jpg' %}" class="card-img-top" alt="math">
+      <div class="card-body">
+        <h5 class="card-title text-light mb-5">Math</h5>
+        <a href="{% url 'main:math' %}" class="btn btn-outline-info text-light fw-bold">Go</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4 mb-3">
+    <div class="card bg-dark border border-1" style="--bs-border-opacity: .5;">
+      <img src="{% static 'images/physics.jpg' %}" class="card-img-top" alt="physics">
+      <div class="card-body">
+        <h5 class="card-title text-light mb-5">physics</h5>
+        <a href="{% url 'main:physics' %}" class="btn btn-outline-info text-light fw-bold">Go</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4 mb-3">
+    <div class="card bg-dark border border-1" style="--bs-border-opacity: .5;">
+      <img src="{% static 'images/chemistry.png' %}" class="card-img-top" alt="chemistry">
+      <div class="card-body">
+        <h5 class="card-title text-light mb-5">Chemistry</h5>
+        <a href="{% url 'main:chemistry' %}" class="btn btn-outline-info text-light fw-bold">Go</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4 mb-3 mb-sm-0">
+    <div class="card bg-dark border border-1" style="--bs-border-opacity: .5;">
+      <img src="{% static 'images/compsci.png' %}" class="card-img-top" alt="compsci">
+      <div class="card-body">
+        <h5 class="card-title text-light mb-5">Computer Science</h5>
+        <a href="{% url 'main:compsci' %}" class="btn btn-outline-info text-light fw-bold">Go</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-success">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-light">you have logged in</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-light">
+        *NOTE* There are no benefits for having an account. All information are accessible with or
+        without an account
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="accountCreationModal" tabindex="-1" aria-labelledby="GeneralModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-success">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-light">You have Created an Account</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-light">
+        *NOTE* There are no benefits for having an account. All information are accessible with or
+        without an account
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.message == "Thanks for The Feedback" %}
+                var myModal = new bootstrap.Modal(document.getElementById('feedbackModal'), {});
+                myModal.toggle();
+            {% elif message.message == "you have logged in" %}
+                var myModal = new bootstrap.Modal(document.getElementById('loginModal'), {});
+                myModal.toggle();
+            {% elif message.message == "You have Logged Out" %}
+                var myModal = new bootstrap.Modal(document.getElementById('logoutModal'), {});
+                myModal.toggle();
+            {% elif message.message == "you have created an account" %}
+                var myModal = new bootstrap.Modal(document.getElementById('accountCreationModal'), {});
+                myModal.toggle();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock content %}
+</body>
+</html>
