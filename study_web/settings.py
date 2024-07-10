@@ -29,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [".vercel.app", 'now.sh', "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -139,6 +139,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "my_static_files")
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'my_stati_files')
 
 # media files (User uploaded files)
 MEDIA_URL = '/media/'
