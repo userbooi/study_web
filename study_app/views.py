@@ -117,6 +117,8 @@ def study_math(request, id):
     return render(request, 'study.html', context)
 
 def test(request, subject, unit):
+    u = unit.replace("%20", " ")
+    s = subject.replace("%20", " ")
     if request.method != "POST":
         current_url = request.resolver_match.view_name
 
@@ -126,11 +128,11 @@ def test(request, subject, unit):
         compsci_grades = CompSciMain.objects.all().order_by('date_added')
 
         feedback_form = FeedbackForm()
-        if not MultipleChoiceQuiz.objects.filter(unit=unit):
-            multiple_choice_quiz_form = MultipleChoiceQuizForm(initial={"unit": unit})
+        if not MultipleChoiceQuiz.objects.filter(unit=u):
+            multiple_choice_quiz_form = MultipleChoiceQuizForm(initial={"unit": u})
         else:
             multiple_choice_quiz_form = None
-            quiz = MultipleChoiceQuiz.objects.get(unit=unit)
+            quiz = MultipleChoiceQuiz.objects.get(unit=u)
             questions = list(quiz.questions.all())
             choices = list(MultipleChoiceChoice.objects.all())
 
@@ -152,21 +154,21 @@ def test(request, subject, unit):
             if multiple_choice_quiz_form.is_valid():
                 multiple_choice_quiz_form.save()
                 messages.success(request, "successfully added")
-                return redirect("main:test", subject=subject , unit=unit)
+                return redirect("main:test", subject=s , unit=u)
         elif "question" in request.POST and "choice" not in request.POST:
             multiple_choice_question_form = MultipleChoiceQuestionForm(data=request.POST)
             if multiple_choice_question_form.is_valid():
                 multiple_choice_question_form.save()
                 messages.success(request, "successfully added")
-                return redirect("main:test", subject=subject, unit=unit)
+                return redirect("main:test", subject=s, unit=u)
         else:
             multiple_choice_choice_form = MultipleChoiceChoiceForm(data=request.POST)
             if multiple_choice_choice_form.is_valid():
                 multiple_choice_choice_form.save()
                 messages.success(request, "successfully added")
-                return redirect("main:test", subject=subject, unit=unit)
+                return redirect("main:test", subject=s, unit=u)
         messages.error(request, "something went wrong")
-        return redirect("main:test", subject=subject, unit=unit)
+        return redirect("main:test", subject=s, unit=u)
 
     context = {
         "math_grades": math_grades,
@@ -180,11 +182,11 @@ def test(request, subject, unit):
         "multiple_choice_choice_form": multiple_choice_choice_form,
 
         "current_url": current_url,
-        "unit": unit,
-        "subject": subject
+        "unit": u,
+        "subject": s
     }
 
-    if MultipleChoiceQuiz.objects.filter(unit=unit):
+    if MultipleChoiceQuiz.objects.filter(unit=u):
         context = context | {
                              'quiz':quiz,
                              'questions':questions,
@@ -195,6 +197,7 @@ def test(request, subject, unit):
     return render(request, "test.html", context)
 
 def test_check(request, subject, unit):
+    u = unit.replace("%20", " ")
     data = dict(request.POST)
     correct = False
     correct_answer = None
@@ -202,10 +205,10 @@ def test_check(request, subject, unit):
         if k == "csrfmiddlewaretoken":
             continue
         else:
-            correct_answer = MultipleChoiceQuiz.objects.get(unit=unit).questions.get(title=k).choices.get(correct=True)
+            correct_answer = MultipleChoiceQuiz.objects.get(unit=u).questions.get(title=k).choices.get(correct=True)
             if v == ['']:
                 break
-            answer = MultipleChoiceQuiz.objects.get(unit=unit).questions.get(title=k).choices.get(choice=v[-1])
+            answer = MultipleChoiceQuiz.objects.get(unit=u).questions.get(title=k).choices.get(choice=v[-1])
             correct = answer.correct
     return JsonResponse({"status": correct, "correct_answer": correct_answer.choice})
     # return JsonResponse({"it": "worked"})
