@@ -4,7 +4,7 @@
 {% load static %}
 {% load bootstrap5 %}
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     {% block header %}
     <title>{{ unit }} test</title>
     <link rel="stylesheet" href="{% static 'test.css' %}">
