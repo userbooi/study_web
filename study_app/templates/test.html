@@ -163,7 +163,7 @@
     const quiz_unit = "{{ quiz.unit|escapejs }} Test";
     const quiz_passing = "{{ quiz.required_score_to_pass|escapejs }}";
 </script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{% static 'scripts/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'scripts/test.js' %}"></script>
 {% endblock content %}
 </body>
