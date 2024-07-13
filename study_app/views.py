@@ -32,7 +32,7 @@ def home(request):
 
 def math(request):
     if request.method != "POST":
-        math, physics, chem, compsci = [], [], [], []
+        math = []
         math_grades = MathMain.objects.all().order_by('date_added')
         physics_grades = PhysicsMain.objects.all().order_by('date_added')
         chem_grades = ChemMain.objects.all().order_by('date_added')
@@ -224,17 +224,23 @@ def test_check(request, subject, unit):
 
 def physics(request):
     if request.method != "POST":
+        physics = []
         math_grades = MathMain.objects.all().order_by('date_added')
         physics_grades = PhysicsMain.objects.all().order_by('date_added')
         chem_grades = ChemMain.objects.all().order_by('date_added')
         compsci_grades = CompSciMain.objects.all().order_by('date_added')
 
+        for main in PhysicsMain.objects.all().order_by('date_added'):
+            physics.append([main.title, base64.b64encode(bytes(main.image)).decode('utf-8'), main.id])
+
         feedback_form = FeedbackForm()
-        physics_main_form = PhysicsMainForm()
+        physics_main_form = MainsForms()
     else:
-        physics_main_form = PhysicsMainForm(request.POST, request.FILES)
+        physics_main_form = MainsForms(request.POST, request.FILES)
         if physics_main_form.is_valid():
-            physics_main_form.save()
+            title = physics_main_form.cleaned_data["title"]
+            image = physics_main_form.cleaned_data["image"]
+            PhysicsMain.objects.create(title=title, image=image.read())
             messages.success(request, "successfully added")
             return redirect("main:physics")
         messages.success(request, "something went wrong")
@@ -245,6 +251,8 @@ def physics(request):
         "physics_grades": physics_grades,
         "chem_grades": chem_grades,
         "compsci_grades": compsci_grades,
+
+        "physics": physics,
 
         "feedback_form": feedback_form,
         "physics_main_form": physics_main_form
@@ -313,17 +321,23 @@ def study_physics(request, id):
 
 def chemistry(request):
     if request.method != "POST":
+        chem = []
         math_grades = MathMain.objects.all().order_by('date_added')
         physics_grades = PhysicsMain.objects.all().order_by('date_added')
         chem_grades = ChemMain.objects.all().order_by('date_added')
         compsci_grades = CompSciMain.objects.all().order_by('date_added')
 
+        for main in ChemMain.objects.all().order_by('date_added'):
+            chem.append([main.title, base64.b64encode(bytes(main.image)).decode('utf-8'), main.id])
+
         feedback_form = FeedbackForm()
-        chem_main_form = ChemMainForm()
+        chem_main_form = MainsForms()
     else:
-        chem_main_form = ChemMainForm(request.POST, request.FILES)
+        chem_main_form = MainsForms(request.POST, request.FILES)
         if chem_main_form.is_valid():
-            chem_main_form.save()
+            title = chem_main_form.cleaned_data["title"]
+            image = chem_main_form.cleaned_data["image"]
+            ChemMain.objects.create(title=title, image=image.read())
             messages.success(request, "successfully added")
             return redirect("main:chemistry")
         messages.success(request, "something went wrong")
@@ -334,6 +348,8 @@ def chemistry(request):
         "physics_grades": physics_grades,
         "chem_grades": chem_grades,
         "compsci_grades": compsci_grades,
+
+        "chem": chem,
 
         "feedback_form": feedback_form,
         "chem_main_form": chem_main_form
@@ -402,17 +418,23 @@ def study_chemistry(request, id):
 
 def compsci(request):
     if request.method != "POST":
+        compsci = []
         math_grades = MathMain.objects.all().order_by('date_added')
         physics_grades = PhysicsMain.objects.all().order_by('date_added')
         chem_grades = ChemMain.objects.all().order_by('date_added')
         compsci_grades = CompSciMain.objects.all().order_by('date_added')
 
+        for main in CompSciMain.objects.all().order_by('date_added'):
+            compsci.append([main.title, base64.b64encode(bytes(main.image)).decode('utf-8'), main.id])
+
         feedback_form = FeedbackForm()
-        compsci_main_form = CompSciMainForm()
+        compsci_main_form = MainsForms()
     else:
-        compsci_main_form = CompSciMainForm(request.POST, request.FILES)
+        compsci_main_form = MainsForms(request.POST, request.FILES)
         if compsci_main_form.is_valid():
-            compsci_main_form.save()
+            title = compsci_main_form.cleaned_data["title"]
+            image = compsci_main_form.cleaned_data["image"]
+            CompSciMain.objects.create(title=title, image=image.read())
             messages.success(request, "successfully added")
             return redirect("main:compsci")
         messages.success(request, "something went wrong")
@@ -423,6 +445,8 @@ def compsci(request):
         "physics_grades": physics_grades,
         "chem_grades": chem_grades,
         "compsci_grades": compsci_grades,
+
+        "compsci": compsci,
 
         "feedback_form": feedback_form,
         "compsci_main_form": compsci_main_form

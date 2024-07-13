@@ -55,7 +55,7 @@ class MathSubUnit(models.Model):
 class PhysicsMain(models.Model):
     title = models.CharField(max_length=100)
     date_added = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to="images/")
+    image = models.BinaryField(editable=True, null=False, blank=False)
 
     def __str__(self):
         if len(self.title) > 20:
@@ -89,7 +89,7 @@ class PhysicsSubUnit(models.Model):
 class ChemMain(models.Model):
     title = models.CharField(max_length=100)
     date_added = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to="images/")
+    image = models.BinaryField(editable=True, null=False, blank=False)
 
     def __str__(self):
         if len(self.title) > 20:
@@ -123,7 +123,7 @@ class ChemSubUnit(models.Model):
 class CompSciMain(models.Model):
     title = models.CharField(max_length=100)
     date_added = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to="images/")
+    image = models.BinaryField(editable=True, null=False, blank=False)
 
     def __str__(self):
         if len(self.title) > 20:

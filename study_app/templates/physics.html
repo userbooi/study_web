@@ -40,13 +40,13 @@
     </div>
 
     <div class="row" style="margin-left: 6%; margin-right: 6%;">
-      {% for grade in physics_grades %}
+      {% for grade in physics %}
       <div class="col-sm-4 mb-3">
         <div class="card bg-dark border border-4 border-success" style="--bs-border-opacity: .5;">
-          <img src="{{ grade.image.url }}" class="card-img-top" alt="{{ grade.title }}">
+          <img src="data:image/png;base64,{{ grade.1 }}" class="card-img-top" alt="{{ grade.0 }}">
           <div class="card-body">
-            <h5 class="card-title text-light mb-5">{{ grade.title }}</h5>
-            <a href="{% url 'main:study_physics' grade.id %}" class="btn btn-outline-info text-light">Learn/Review</a>
+            <h5 class="card-title text-light mb-5">{{ grade.0 }}</h5>
+            <a href="{% url 'main:study_physics' grade.2 %}" class="btn btn-outline-info text-light">Learn/Review</a>
           </div>
         </div>
       </div>
