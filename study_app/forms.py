@@ -3,6 +3,10 @@ from .models import Feedback, MathMain, PhysicsMain, ChemMain, CompSciMain, Math
     PhysicsSubUnit, ChemUnit, ChemSubUnit, CompSciUnit, CompSciSubUnit, MultipleChoiceQuiz, MultipleChoiceQuestion, \
     MultipleChoiceChoice
 
+class MainsForms(forms.Form):
+    title = forms.CharField(max_length=250)
+    image = forms.ImageField()
+
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback

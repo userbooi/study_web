@@ -4,10 +4,11 @@ from .models import Feedback, MathMain, PhysicsMain, ChemMain, CompSciMain, Math
     MultipleChoiceQuiz, MultipleChoiceChoice
 from .forms import FeedbackForm, MathMainForm, PhysicsMainForm, ChemMainForm, CompSciMainForm, MathUnitForm, MathSubUnitForm, \
     PhysicsUnitForm, PhysicsSubUnitForm, ChemUnitForm, ChemSubUnitForm, CompSciSubUnitForm, CompSciUnitForm, \
-    MultipleChoiceQuizForm, MultipleChoiceQuestionForm, MultipleChoiceChoiceForm
+    MultipleChoiceQuizForm, MultipleChoiceQuestionForm, MultipleChoiceChoiceForm, MainsForms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+import base64
 
 import json, random
 
@@ -31,17 +32,23 @@ def home(request):
 
 def math(request):
     if request.method != "POST":
+        math, physics, chem, compsci = [], [], [], []
         math_grades = MathMain.objects.all().order_by('date_added')
         physics_grades = PhysicsMain.objects.all().order_by('date_added')
         chem_grades = ChemMain.objects.all().order_by('date_added')
         compsci_grades = CompSciMain.objects.all().order_by('date_added')
 
+        for main in MathMain.objects.all().order_by('date_added'):
+            math.append([main.title, base64.b64encode(bytes(main.image)).decode('utf-8'), main.id])
+
         feedback_form = FeedbackForm()
-        math_main_form = MathMainForm()
+        math_main_form = MainsForms()
     else:
-        math_main_form = MathMainForm(request.POST, request.FILES)
+        math_main_form = MainsForms(request.POST, request.FILES)
         if math_main_form.is_valid():
-            math_main_form.save()
+            title = math_main_form.cleaned_data["title"]
+            image = math_main_form.cleaned_data["image"]
+            MathMain.objects.create(title=title, image=image.read())
             messages.success(request, "successfully added")
             return redirect("main:math")
         messages.success(request, "something went wrong")
@@ -52,6 +59,8 @@ def math(request):
         "physics_grades": physics_grades,
         "chem_grades": chem_grades,
         "compsci_grades": compsci_grades,
+
+        "math": math,
 
         "feedback_form": feedback_form,
         "math_main_form": math_main_form

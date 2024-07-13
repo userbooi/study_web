@@ -20,7 +20,8 @@ class Feedback(models.Model):
 class MathMain(models.Model):
     title = models.CharField(max_length=100)
     date_added = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to="images/")
+    # image = models.ImageField(upload_to="images/")
+    image = models.BinaryField(editable=True, null=False, blank=False)
 
     def __str__(self):
         if len(self.title) > 20:
