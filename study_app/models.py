@@ -45,6 +45,7 @@ class MathSubUnit(models.Model):
     title = models.CharField(max_length=250)
     unit = models.ForeignKey(MathUnit, on_delete=models.CASCADE)
     description = models.TextField(blank=False)
+    image = models.BinaryField(editable=True, null=True, blank=True)
 
     def __str__(self):
         if len(self.title) > 20:
@@ -79,6 +80,7 @@ class PhysicsSubUnit(models.Model):
     title = models.CharField(max_length=250)
     unit = models.ForeignKey(PhysicsUnit, on_delete=models.CASCADE)
     description = models.TextField(blank=False)
+    image = models.BinaryField(editable=True, null=True, blank=True)
 
     def __str__(self):
         if len(self.title) > 20:
@@ -113,6 +115,7 @@ class ChemSubUnit(models.Model):
     title = models.CharField(max_length=250)
     unit = models.ForeignKey(ChemUnit, on_delete=models.CASCADE)
     description = models.TextField(blank=False)
+    image = models.BinaryField(editable=True, null=True, blank=True)
 
     def __str__(self):
         if len(self.title) > 20:
@@ -147,6 +150,7 @@ class CompSciSubUnit(models.Model):
     title = models.CharField(max_length=250)
     unit = models.ForeignKey(CompSciUnit, on_delete=models.CASCADE)
     description = models.TextField(blank=False)
+    image = models.BinaryField(editable=True, null=True, blank=True)
 
     def __str__(self):
         if len(self.title) > 20:

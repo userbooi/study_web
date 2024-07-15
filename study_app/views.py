@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect, HttpResponseRedirect
 from .models import Feedback, MathMain, PhysicsMain, ChemMain, CompSciMain, MathUnit, MathSubUnit, \
     PhysicsUnit, PhysicsSubUnit, ChemUnit, ChemSubUnit, CompSciUnit, CompSciSubUnit, MultipleChoiceQuestion, \
     MultipleChoiceQuiz, MultipleChoiceChoice
-from .forms import FeedbackForm, MathMainForm, PhysicsMainForm, ChemMainForm, CompSciMainForm, MathUnitForm, MathSubUnitForm, \
-    PhysicsUnitForm, PhysicsSubUnitForm, ChemUnitForm, ChemSubUnitForm, CompSciSubUnitForm, CompSciUnitForm, \
-    MultipleChoiceQuizForm, MultipleChoiceQuestionForm, MultipleChoiceChoiceForm, MainsForms
+from .forms import FeedbackForm, MathUnitForm, MathSubUnitForm, PhysicsUnitForm, PhysicsSubUnitForm, ChemUnitForm, \
+    ChemSubUnitForm, CompSciSubUnitForm, CompSciUnitForm, MultipleChoiceQuizForm, MultipleChoiceQuestionForm, \
+    MultipleChoiceChoiceForm, MainsForms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -82,7 +82,7 @@ def study_math(request, id):
 
         feedback_form = FeedbackForm()
         unit_form = MathUnitForm()
-        subunit_form = MathSubUnitForm()
+        subunit_form = MathSubUnitForm(MathUnit.objects.filter(subject=grade))
     else:
         if "unit" in request.POST and "subunit" not in request.POST:
             grade = MathMain.objects.get(pk=id)

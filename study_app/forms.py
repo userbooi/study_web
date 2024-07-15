@@ -3,6 +3,9 @@ from .models import Feedback, MathMain, PhysicsMain, ChemMain, CompSciMain, Math
     PhysicsSubUnit, ChemUnit, ChemSubUnit, CompSciUnit, CompSciSubUnit, MultipleChoiceQuiz, MultipleChoiceQuestion, \
     MultipleChoiceChoice
 
+def make_choices(subject):
+    return ((f"{num}", unit) for num, unit in enumerate(subject.objects.all()))
+
 class MainsForms(forms.Form):
     title = forms.CharField(max_length=250)
     image = forms.ImageField()
@@ -24,10 +27,16 @@ class MathUnitForm(forms.ModelForm):
         model = MathUnit
         fields = ["title"]
 
-class MathSubUnitForm(forms.ModelForm):
-    class Meta:
-        model = MathSubUnit
-        fields = ["title", "description", "unit"]
+class MathSubUnitForm(forms.Form):
+    def __init__(self, u):
+        super().__init__()
+        title = forms.CharField(max_length=250)
+        description = forms.CharField(widget=forms.Textarea)
+        unit = forms.ChoiceField(choices=make_choices(u))
+        image = forms.ImageField()
+    # class Meta:
+    #     model = MathSubUnit
+    #     fields = ["title", "description", "unit"]
 
 class PhysicsMainForm(forms.ModelForm):
     class Meta:
