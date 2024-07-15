@@ -30,7 +30,7 @@
               </a>
               <nav class="nav nav-pills flex-column">
                 {% for subunit in subunits %}
-                  {% if subunit.1 == 1 %}
+                  {% if subunit.1 == unit %}
                     <a class="nav-link ms-3 my-1 border-bottom border-dark text-dark" href="#{{ subunit.0 }}">
                         {{ subunit.0 }}
                     </a>
