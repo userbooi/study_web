@@ -20,7 +20,7 @@
 
 <div class="mb-4 mt-4 bg-light border rounded-3 jumbotron-custom">
   <div class="container-fluid">
-    <div class="row bg-light align-center pt-5 border-dark">
+    <div class="row bg-light align-center pt-5 border-dark mb-3">
       <div class="col-2" style="overflow-y:auto; height: 80vh;">
         <nav id="navbar-example3" class="h-100 flex-column align-items-stretch pe-4">
           <nav class="nav nav-pills flex-column">
@@ -30,9 +30,9 @@
               </a>
               <nav class="nav nav-pills flex-column">
                 {% for subunit in subunits %}
-                  {% if subunit.unit == unit %}
-                    <a class="nav-link ms-3 my-1 border-bottom border-dark text-dark" href="#{{ subunit.title }}">
-                        {{ subunit.title }}
+                  {% if subunit.1 == 1 %}
+                    <a class="nav-link ms-3 my-1 border-bottom border-dark text-dark" href="#{{ subunit.0 }}">
+                        {{ subunit.0 }}
                     </a>
                   {% endif %}
                 {% endfor %}
@@ -50,10 +50,13 @@
             </div>
             <br>
             {% for subunit in subunits %}
-              {% if subunit.unit == unit %}
-                <div id="{{ subunit.title }}">
-                  <h5>{{ subunit.title }}</h5>
-                  <p>{{ subunit.description }}</p>
+              {% if subunit.1 == unit %}
+                <div id="{{ subunit.0 }}">
+                  <h5>{{ subunit.0 }}</h5>
+                  <p>{{ subunit.2 }}</p>
+                  {% if subunit.3 %}
+                    <img src="data:image/png;base64,{{ subunit.3 }}" class="card-img-top" alt="{{ subunit.0 }}" style="height: 35%; width: 35%;">
+                  {% endif %}
                 </div>
                 <br>
               {% endif %}
@@ -83,7 +86,7 @@
 <div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom2" style="--bs-bg-opacity: .90;">
     <div class="container-fluid py-2">
         <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New Subunit</h1>
-        <form action="{% url current_url grade.id %}" method="post" class="form">
+        <form action="{% url current_url grade.id %}" method="post" class="form" enctype="multipart/form-data">
             {% csrf_token %}
             {% bootstrap_form subunit_form %}
 

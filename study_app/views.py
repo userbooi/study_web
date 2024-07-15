@@ -79,10 +79,24 @@ def study_math(request, id):
 
         units = grade.mathunit_set.order_by("id")
         subunits = MathSubUnit.objects.all().order_by("id")
+        subs = []
+        for subunit in subunits:
+            if subunit.image:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             base64.b64encode(bytes(subunit.image)).decode('utf-8'),
+                             subunit.id])
+            else:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             None,
+                             subunit.id])
 
         feedback_form = FeedbackForm()
         unit_form = MathUnitForm()
-        subunit_form = MathSubUnitForm(MathUnit.objects.filter(subject=grade))
+        subunit_form = MathSubUnitForm()
     else:
         if "unit" in request.POST and "subunit" not in request.POST:
             grade = MathMain.objects.get(pk=id)
@@ -96,10 +110,12 @@ def study_math(request, id):
                 messages.success(request, "successfully added")
                 return redirect("main:study_math", id=id)
         else:
-            subunit_form = MathSubUnitForm(data=request.POST)
+            subunit_form = MathSubUnitForm(request.POST, request.FILES)
             if subunit_form.is_valid():
                 new_subunit = subunit_form.save(commit=False)
                 new_subunit.id = MathSubUnit.objects.count() + 1
+                if request.FILES:
+                    new_subunit.image = subunit_form.cleaned_data["image"].read()
                 new_subunit.save()
                 messages.success(request, "successfully added")
                 return redirect("main:study_math", id=id)
@@ -118,7 +134,7 @@ def study_math(request, id):
         "subunit_form": subunit_form,
 
         "units": units,
-        "subunits": subunits,
+        "subunits": subs,
 
         "current_url": current_url
     }
@@ -271,6 +287,20 @@ def study_physics(request, id):
 
         units = grade.physicsunit_set.order_by("id")
         subunits = PhysicsSubUnit.objects.all().order_by("id")
+        subs = []
+        for subunit in subunits:
+            if subunit.image:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             base64.b64encode(bytes(subunit.image)).decode('utf-8'),
+                             subunit.id])
+            else:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             None,
+                             subunit.id])
 
         feedback_form = FeedbackForm()
         unit_form = PhysicsUnitForm()
@@ -290,10 +320,12 @@ def study_physics(request, id):
             messages.error(request, "something went wrong")
             return redirect("main:study_physics", id=id)
         else:
-            subunit_form = PhysicsSubUnitForm(data=request.POST)
+            subunit_form = PhysicsSubUnitForm(request.POST, request.FILES)
             if subunit_form.is_valid():
                 new_subunit = subunit_form.save(commit=False)
                 new_subunit.id = PhysicsSubUnit.objects.count() + 1
+                if request.FILES:
+                    new_subunit.image = subunit_form.cleaned_data["image"].read()
                 new_subunit.save()
                 messages.success(request, "successfully added")
                 return redirect("main:study_physics", id=id)
@@ -312,7 +344,7 @@ def study_physics(request, id):
         "subunit_form": subunit_form,
 
         "units": units,
-        "subunits": subunits,
+        "subunits": subs,
 
         "current_url": current_url
     }
@@ -368,6 +400,20 @@ def study_chemistry(request, id):
 
         units = grade.chemunit_set.order_by("id")
         subunits = ChemSubUnit.objects.all().order_by("id")
+        subs = []
+        for subunit in subunits:
+            if subunit.image:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             base64.b64encode(bytes(subunit.image)).decode('utf-8'),
+                             subunit.id])
+            else:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             None,
+                             subunit.id])
 
         feedback_form = FeedbackForm()
         unit_form = ChemUnitForm()
@@ -387,10 +433,12 @@ def study_chemistry(request, id):
             messages.error(request, "something went wrong")
             return redirect("main:study_chemistry", id=id)
         else:
-            subunit_form = ChemSubUnitForm(data=request.POST)
+            subunit_form = ChemSubUnitForm(request.POST, request.FILES)
             if subunit_form.is_valid():
                 new_subunit = subunit_form.save(commit=False)
                 new_subunit.id = ChemSubUnit.objects.count() + 1
+                if request.FILES:
+                    new_subunit.image = subunit_form.cleaned_data["image"].read()
                 new_subunit.save()
                 messages.success(request, "successfully added")
                 return redirect("main:study_chemistry", id=id)
@@ -409,7 +457,7 @@ def study_chemistry(request, id):
         "subunit_form": subunit_form,
 
         "units": units,
-        "subunits": subunits,
+        "subunits": subs,
 
         "current_url": current_url
     }
@@ -465,6 +513,20 @@ def study_compsci(request, id):
 
         units = grade.compsciunit_set.order_by("id")
         subunits = CompSciSubUnit.objects.all().order_by("id")
+        subs = []
+        for subunit in subunits:
+            if subunit.image:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             base64.b64encode(bytes(subunit.image)).decode('utf-8'),
+                             subunit.id])
+            else:
+                subs.append([subunit.title,
+                             subunit.unit,
+                             subunit.description,
+                             None,
+                             subunit.id])
 
         feedback_form = FeedbackForm()
         unit_form = CompSciUnitForm()
@@ -484,10 +546,12 @@ def study_compsci(request, id):
             messages.error(request, "something went wrong")
             return redirect("main:study_compsci", id=id)
         else:
-            subunit_form = CompSciSubUnitForm(data=request.POST)
+            subunit_form = CompSciSubUnitForm(request.POST, request.FILES)
             if subunit_form.is_valid():
                 new_subunit = subunit_form.save(commit=False)
                 new_subunit.id = CompSciSubUnit.objects.count() + 1
+                if request.FILES:
+                    new_subunit.image = subunit_form.cleaned_data["image"].read()
                 new_subunit.save()
                 messages.success(request, "successfully added")
                 return redirect("main:study_compsci", id=id)
@@ -506,7 +570,7 @@ def study_compsci(request, id):
         "subunit_form": subunit_form,
 
         "units": units,
-        "subunits": subunits,
+        "subunits": subs,
 
         "current_url": current_url
     }
