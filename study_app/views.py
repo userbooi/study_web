@@ -326,6 +326,7 @@ def study_physics(request, id):
                 new_subunit.id = PhysicsSubUnit.objects.count() + 1
                 if request.FILES:
                     new_subunit.image = subunit_form.cleaned_data["image"].read()
+                # print(subunit_form.cleaned_data["description"])
                 new_subunit.save()
                 messages.success(request, "successfully added")
                 return redirect("main:study_physics", id=id)
