@@ -53,7 +53,7 @@
               {% if subunit.1 == unit %}
                 <div id="{{ subunit.0 }}">
                   <h5>{{ subunit.0 }}</h5>
-                  <p>{{ subunit.2 }}</p>
+                  <pre>{{ subunit.2 }}</pre>
                   {% if subunit.3 %}
                     <img src="data:image/png;base64,{{ subunit.3 }}" class="card-img-top" alt="{{ subunit.0 }}" style="height: 35%; width: 35%;">
                   {% endif %}
@@ -62,7 +62,7 @@
               {% endif %}
             {% endfor %}
             <a class="btn btn-info text-light" role="button" href="{% url 'main:test' unit.subject.title unit.title %}">Take Test</a>
-            <br>
+            <br><br><br>
           {% endfor %}
         </div>
       </div>
