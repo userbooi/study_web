@@ -3,11 +3,6 @@ from .models import Feedback, MathMain, PhysicsMain, ChemMain, CompSciMain, Math
     PhysicsSubUnit, ChemUnit, ChemSubUnit, CompSciUnit, CompSciSubUnit, MultipleChoiceQuiz, MultipleChoiceQuestion, \
     MultipleChoiceChoice
 
-
-def make_choices(subject):
-    return ((f"{num}", unit) for num, unit in enumerate(subject))
-
-
 class MainsForms(forms.Form):
     title = forms.CharField(max_length=250)
     image = forms.ImageField()
@@ -107,6 +102,7 @@ class MultipleChoiceQuestionForm(forms.ModelForm):
     class Meta:
         model = MultipleChoiceQuestion
         fields = ["quiz", "title"]
+    image = forms.ImageField(label="solution")
 
 
 class MultipleChoiceChoiceForm(forms.ModelForm):

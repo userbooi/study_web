@@ -36,5 +36,6 @@ urlpatterns = [
     path("game", views.game, name="game"),
     path("test/<subject>/<unit>", views.test, name="test"),
     path("test/<subject>/<unit>/check-answer", views.test_check, name="test_check"),
+    path("test/<subject>/<unit>/show-answer", views.show_answer, name="show_answer"),
     path("testing", views.testing, name="testing")
 ]

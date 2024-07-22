@@ -175,6 +175,7 @@ class MultipleChoiceQuiz(models.Model):
 class MultipleChoiceQuestion(models.Model):
     quiz = models.ForeignKey(MultipleChoiceQuiz, on_delete=models.CASCADE, related_name='questions')
     title = models.TextField(blank=False)
+    solution = models.BinaryField(editable=True, null=False, blank=False, default=bytes(2))
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

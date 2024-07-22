@@ -26,8 +26,9 @@
                 <div class="fs-3 mb-3" id="question"></div>
                 <div class="fs-4 ms-3" id="choices"></div>
             </div>
-            <button id="submit_button" class="btn btn-info text-dark text-end"></button>
+            <button type="submit" id="submit_button" class="btn btn-info text-dark text-end"></button>
         </form>
+        <button id="solution_button" class="btn btn-info text-dark ms-auto mt-3">View Solution</button>
     </div>
 </div>
 
@@ -91,7 +92,7 @@
 <div class="p-5 text-center mb-4 mt-4 bg-dark border rounded-3 jumbotron-custom" style="--bs-bg-opacity: .90;">
     <div class="container-fluid py-2">
         <h1 class="display-5 fw-bold text-primary border-1 border-bottom">Add a New Question</h1>
-        <form action="{% url current_url subject unit %}" method="post" class="form text-light mt-5">
+        <form action="{% url current_url subject unit %}" method="post" class="form text-light mt-5" enctype="multipart/form-data">
             {% csrf_token %}
             {% bootstrap_form multiple_choice_question_form %}
 

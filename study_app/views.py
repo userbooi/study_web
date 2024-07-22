@@ -181,9 +181,11 @@ def test(request, subject, unit):
                 messages.success(request, "successfully added")
                 return redirect("main:test", subject=s , unit=u)
         elif "question" in request.POST and "choice" not in request.POST:
-            multiple_choice_question_form = MultipleChoiceQuestionForm(data=request.POST)
+            multiple_choice_question_form = MultipleChoiceQuestionForm(request.POST, request.FILES)
             if multiple_choice_question_form.is_valid():
-                multiple_choice_question_form.save()
+                new_question = multiple_choice_question_form.save(commit=False)
+                new_question.solution = multiple_choice_question_form.cleaned_data["image"].read()
+                new_question.save()
                 messages.success(request, "successfully added")
                 return redirect("main:test", subject=s, unit=u)
         else:
@@ -237,6 +239,16 @@ def test_check(request, subject, unit):
             correct = answer.correct
     return JsonResponse({"status": correct, "correct_answer": correct_answer.choice})
     # return JsonResponse({"it": "worked"})
+
+def show_answer(request, subject, unit):
+    # u = unit.replace("%20", " ")
+    # s = subject.replace("%20", " ")
+    data = dict(request.POST)
+    
+    solution_ = MultipleChoiceQuestion.objects.get(title=data["question_name"][0]).solution
+    solution_image = base64.b64encode(bytes(solution_)).decode('utf-8')
+
+    return JsonResponse({"image": solution_image}) 
 
 def physics(request):
     if request.method != "POST":

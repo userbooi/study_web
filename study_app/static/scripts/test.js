@@ -1,4 +1,8 @@
 function loadQuestion() {
+    if (document.getElementById("solution_image")) {
+        document.getElementById("solution_image").remove();
+    }
+
     question = data[q_counter];
 
     const [q, c] = Object.entries(question)[0]; // Object.entries() turns dictionaries/hashmaps to enumerated arrays
@@ -17,7 +21,10 @@ function loadQuestion() {
     form = document.getElementById("multiple_choice");
     csrf = document.getElementsByName("csrfmiddlewaretoken");
     elements = [...document.getElementsByClassName("choice")];
+    view_solution_button = document.getElementById("solution_button");
+
     document.getElementById("submit_button").innerHTML = "Answer!";
+    view_solution_button.style.display = "none";
 }
 
 function getFormInputs() {    
@@ -49,7 +56,6 @@ function getFormInputs() {
                 document.getElementById("incorrectMessage").innerHTML = `The correct answer should be ${response.correct_answer}`;
                 var myModal = new bootstrap.Modal(document.getElementById("wrongModal"), {});
             }
-            myModal.toggle();
             q_counter++;
             if (q_counter < parseInt(t_question)) {
                 progress += parseInt(1/t_question * 100);
@@ -60,6 +66,8 @@ function getFormInputs() {
             }
             progress_bar.setAttribute("aria-valuenow", `${progress}`);
             progress_bar.children[0].setAttribute("style", `width: ${progress}%`);
+
+            myModal.toggle();
         },
         error: function(error) {
             console.Log(error);
@@ -114,6 +122,77 @@ function Results() {
     `;
 }
 
+function getSolution() {
+    var data = {};
+    const [q, c] = Object.entries(question)[0];
+
+    data["csrfmiddlewaretoken"] = csrf[0].value;
+    data["question_name"] = q;
+
+    $.ajax({
+        method: "POST",
+        url: `${url}/show-answer`,
+        data: data,
+        success: function(response) {
+            document.getElementById("regUserContent").innerHTML += `
+                <div class="border-top border-2 border-dark mt-5 text-center p-3" id="solution_image">
+                    <img src="data:image/png;base64,${response["image"]}" class="card-img-top" alt="${q} solution" style="height: 100%; width: 100%;">
+                </div>
+            `;
+            form = document.getElementById("multiple_choice");
+            view_solution_button = document.getElementById("solution_button");
+
+            formEvent();
+            solutionEvent();
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+function formHandler(e) {
+    e.preventDefault();
+    
+    if (q_counter < parseInt(t_question)) {
+        if (submit_counter == 0) {
+            getFormInputs();
+            view_solution_button.style.display = "block";
+        } else {
+            submit_counter = 0;
+            loadQuestion();
+        }
+    } else {
+        Results();
+    }
+}
+
+function solutionHandler(e) {
+    e.preventDefault();
+    view_solution_button.style.display = "none";
+
+    getSolution();
+}
+
+function formEvent() {
+    if (!formEventListener) {
+        form.addEventListener("submit", formHandler);
+        formEventListener = true;
+    } else {
+        form.removeEventListener("submit", formHandler);
+        form.addEventListener("submit", formHandler);
+    }
+}
+
+function solutionEvent() {
+    if (!solutionEventListener) {
+        view_solution_button.addEventListener("click", solutionHandler);
+        solutionEventListener = true;
+    } else {
+        view_solution_button.removeEventListener("click", solutionHandler);
+        view_solution_button.addEventListener("click", solutionHandler);
+    }  
+}
 // console.log(data); //print statement
 
 var question;
@@ -121,6 +200,9 @@ var q_counter = 0;
 var form;
 var csrf;
 var elements;
+var view_solution_button;
+var formEventListener = false;
+var solutionEventListener = false;
 var submit_counter = 0;
 var correct_counter = 0;
 var progress_bar = document.getElementById("progressbar");
@@ -129,19 +211,5 @@ const url = window.location.href;
 // console.log(url);
 
 loadQuestion();
-
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    if (q_counter < parseInt(t_question)) {
-        if (submit_counter == 0) {
-            getFormInputs();
-        } else {
-            submit_counter = 0;
-            loadQuestion();
-        }
-    } else {
-        Results();
-    }
-});
-
+formEvent();
+solutionEvent();
